@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistema de Inventario</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div id="avisos" class="avisos"></div>
+
+    <!-- ===================== INICIO DE SESION ===================== -->
+    <main id="pantalla-login" class="login">
+        <section class="login-card">
+            <div class="login-marca">
+                <div class="logo">ALO_SYSTEM</div>
+                <h1>Sistema de Inventario</h1>
+                <p>Ingresa tu usuario para continuar</p>
+            </div>
+            <form id="form-login" autocomplete="on">
+                <label for="email">Correo electronico</label>
+                <input type="email" id="email" placeholder="usuario@empresa.com" autocomplete="username" required>
+
+                <label for="password">Contrasena</label>
+                <input type="password" id="password" placeholder="Tu contrasena" autocomplete="current-password" required>
+
+                <p id="login-error" class="login-error" hidden></p>
+                <button type="submit" id="btn-login" class="btn btn-primary btn-block">Iniciar sesion</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- ===================== APLICACION ===================== -->
+    <div id="app" class="app" hidden>
+        <aside class="sidebar">
+            <div class="sidebar-marca"><span class="logo logo-sm">AS</span> Inventario</div>
+
+            <nav id="menu" class="menu">
+                <button class="nav-item" data-vista="productos" data-roles="*">Productos</button>
+                <button class="nav-item" data-vista="ventas" data-roles="Administrador,Vendedor">Ventas</button>
+                <button class="nav-item" data-vista="entradas" data-roles="Administrador,Almacenista">Entradas y movimientos</button>
+                <button class="nav-item" data-vista="categorias" data-roles="Administrador,Almacenista">Categorias</button>
+                <button class="nav-item" data-vista="proveedores" data-roles="Administrador,Almacenista">Proveedores</button>
+                <button class="nav-item" data-vista="usuarios" data-roles="Administrador">Usuarios</button>
+            </nav>
+
+            <div class="sidebar-usuario">
+                <strong id="usuario-nombre"></strong>
+                <span id="usuario-rol" class="rol-badge"></span>
+                <button id="btn-salir" class="btn btn-ghost btn-block">Cerrar sesion</button>
+            </div>
+        </aside>
+
+        <main class="contenido">
+
+            <!-- ---------- PRODUCTOS (todos los roles) ---------- -->
+            <section id="vista-productos" class="vista" hidden>
+                <header class="vista-head"><h2>Productos</h2><p>Catalogo con existencias actuales.</p></header>
+
+                <div class="card" data-roles="Administrador,Almacenista">
+                    <h3 id="prod-titulo">Nuevo producto</h3>
+                    <form id="form-producto" class="grid-form">
+                        <input type="hidden" id="prod-id">
+                        <div><label for="prod-codigo">Codigo de barras</label><input type="text" id="prod-codigo" placeholder="Opcional"></div>
+                        <div><label for="prod-nombre">Nombre</label><input type="text" id="prod-nombre" required></div>
+                        <div><label for="prod-desc">Descripcion</label><input type="text" id="prod-desc"></div>
+                        <div><label for="prod-cat">Categoria</label><select id="prod-cat"></select></div>
+                        <div><label for="prod-prov">Proveedor</label><select id="prod-prov"></select></div>
+                        <div><label for="prod-pc">Precio de compra</label><input type="number" step="0.01" min="0" id="prod-pc" value="0"></div>
+                        <div><label for="prod-pv">Precio de venta</label><input type="number" step="0.01" min="0" id="prod-pv" value="0"></div>
+                        <div>
+    <label for="prod-stock">Stock</label>
+    <input type="number" min="0" id="prod-stock" value="0" required>
+</div>
+
+<div>
+    <label for="prod-min">Stock minimo</label>
+    <input type="number" min="0" id="prod-min" value="5">
+</div>
+
+                        <div class="acciones">
+                            <button type="submit" class="btn btn-primary">Guardar producto</button>
+                            <button type="button" id="prod-cancelar" class="btn" hidden>Cancelar edicion</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="tabla-scroll">
+                        <table id="tabla-productos">
+                            <thead><tr>
+                                <th>ID</th><th>Codigo</th><th>Nombre</th><th>Categoria</th>
+                                <th data-roles="Administrador,Almacenista">Proveedor</th>
+                                <th data-roles="Administrador,Almacenista">P. compra</th>
+                                <th>P. venta</th><th>Stock</th>
+                                <th data-roles="Administrador,Almacenista">Acciones</th>
+                            </tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="nota">Las filas resaltadas tienen stock igual o menor al minimo.</p>
+                </div>
+            </section>
+
+            <!-- ---------- VENTAS (Administrador, Vendedor) ---------- -->
+            <section id="vista-ventas" class="vista" hidden>
+                <header class="vista-head"><h2>Ventas</h2><p>Registra ventas o retira productos del inventario.</p></header>
+
+                <div class="fila-cards">
+                    <div class="card">
+                        <h3>Registrar salida</h3>
+                        <form id="form-salida">
+                            <label for="venta-producto">Producto</label>
+                            <select id="venta-producto" required></select>
+                            <label for="venta-cantidad">Cantidad</label>
+                            <input type="number" id="venta-cantidad" min="1" value="1" required>
+                            <label for="venta-tipo">Tipo de salida</label>
+                            <select id="venta-tipo">
+                                <option value="VENTA">Venta (suma al total vendido)</option>
+                                <option value="RETIRO">Retiro del inventario (sin venta)</option>
+                            </select>
+                            <div id="venta-motivo-caja" hidden>
+                                <label for="venta-motivo">Motivo del retiro</label>
+                                <input type="text" id="venta-motivo" placeholder="Ej. producto danado">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">Procesar salida</button>
+                        </form>
+                    </div>
+
+                    <div class="card total-card">
+                        <h3>Total vendido</h3>
+                        <p id="total-ventas" class="total-monto">$0.00</p>
+                        <p id="unidades-ventas" class="nota"></p>
+                        <button id="btn-total" class="btn btn-block">Actualizar total</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Ultimas salidas</h3>
+                    <div class="tabla-scroll">
+                        <table id="tabla-salidas">
+                            <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cant.</th><th>Total</th><th>Usuario</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- ENTRADAS Y MOVIMIENTOS (Administrador, Almacenista) ---------- -->
+            <section id="vista-entradas" class="vista" hidden>
+                <header class="vista-head"><h2>Entradas y movimientos</h2><p>Registra mercancia que entra y consulta el historial.</p></header>
+
+                <div class="card">
+                    <h3>Registrar entrada</h3>
+                    <form id="form-entrada" class="grid-form">
+                        <div><label for="entrada-producto">Producto</label><select id="entrada-producto" required></select></div>
+                        <div><label for="entrada-cantidad">Cantidad</label><input type="number" id="entrada-cantidad" min="1" value="1" required></div>
+                        <div><label for="entrada-motivo">Motivo</label><input type="text" id="entrada-motivo" placeholder="Opcional, ej. compra a proveedor"></div>
+                        <div class="acciones"><button type="submit" class="btn btn-success">Registrar entrada</button></div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Historial (ultimos 50 movimientos)</h3>
+                    <div class="tabla-scroll">
+                        <table id="tabla-movimientos">
+                            <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cant.</th><th>Motivo</th><th>Usuario</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- CATEGORIAS ---------- -->
+            <section id="vista-categorias" class="vista" hidden>
+                <header class="vista-head"><h2>Categorias</h2><p>Organiza tus productos por tipo.</p></header>
+                <div class="card">
+                    <h3 id="cat-titulo">Nueva categoria</h3>
+                    <form id="form-categoria" class="grid-form">
+                        <input type="hidden" id="cat-id">
+                        <div><label for="cat-nombre">Nombre</label><input type="text" id="cat-nombre" required></div>
+                        <div><label for="cat-desc">Descripcion</label><input type="text" id="cat-desc"></div>
+                        <div class="acciones">
+                            <button type="submit" class="btn btn-primary">Guardar categoria</button>
+                            <button type="button" id="cat-cancelar" class="btn" hidden>Cancelar edicion</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="tabla-scroll">
+                        <table id="tabla-categorias">
+                            <thead><tr><th>ID</th><th>Nombre</th><th>Descripcion</th><th>Acciones</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- PROVEEDORES ---------- -->
+            <section id="vista-proveedores" class="vista" hidden>
+                <header class="vista-head"><h2>Proveedores</h2><p>Empresas que te surten mercancia.</p></header>
+                <div class="card">
+                    <h3 id="prv-titulo">Nuevo proveedor</h3>
+                    <form id="form-proveedor" class="grid-form">
+                        <input type="hidden" id="prv-id">
+                        <div><label for="prv-nombre">Empresa</label><input type="text" id="prv-nombre" required></div>
+                        <div><label for="prv-contacto">Contacto</label><input type="text" id="prv-contacto"></div>
+                        <div><label for="prv-tel">Telefono</label><input type="text" id="prv-tel"></div>
+                        <div><label for="prv-email">Correo</label><input type="text" id="prv-email"></div>
+                        <div><label for="prv-dir">Direccion</label><input type="text" id="prv-dir"></div>
+                        <div class="acciones">
+                            <button type="submit" class="btn btn-primary">Guardar proveedor</button>
+                            <button type="button" id="prv-cancelar" class="btn" hidden>Cancelar edicion</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="tabla-scroll">
+                        <table id="tabla-proveedores">
+                            <thead><tr><th>ID</th><th>Empresa</th><th>Contacto</th><th>Telefono</th><th>Correo</th><th>Acciones</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- USUARIOS (solo Administrador) ---------- -->
+            <section id="vista-usuarios" class="vista" hidden>
+                <header class="vista-head"><h2>Usuarios</h2><p>Crea, edita o elimina cuentas del sistema.</p></header>
+                <div class="card">
+                    <h3 id="usr-titulo">Nuevo usuario</h3>
+                    <form id="form-usuario" class="grid-form">
+                        <input type="hidden" id="usr-id">
+                        <div><label for="usr-nombre">Nombre completo</label><input type="text" id="usr-nombre" required></div>
+                        <div><label for="usr-email">Correo</label><input type="email" id="usr-email" required></div>
+                        <div><label for="usr-pass">Contrasena</label><input type="password" id="usr-pass" required placeholder="Minimo 6 caracteres" autocomplete="new-password"></div>
+                        <div><label for="usr-rol">Rol</label><select id="usr-rol" required></select></div>
+                        <div class="acciones">
+                            <button type="submit" class="btn btn-primary">Guardar usuario</button>
+                            <button type="button" id="usr-cancelar" class="btn" hidden>Cancelar edicion</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="tabla-scroll">
+                        <table id="tabla-usuarios">
+                            <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Acciones</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/static/js/core.js"></script>
+    <script src="/static/js/productos.js"></script>
+    <script src="/static/js/catalogos.js"></script>
+    <script src="/static/js/ventas.js"></script>
+    <script src="/static/js/usuarios.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

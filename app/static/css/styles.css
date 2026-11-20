@@ -1,0 +1,1127 @@
+/* =========================================================
+   SISTEMA DE INVENTARIO
+   DISEÑO MORADO / LILA
+   ========================================================= */
+
+:root {
+    --fondo: #f6f0ff;
+    --tarjeta: #ffffff;
+    --texto: #32134f;
+    --suave: #8a6aa3;
+    --borde: #dfc8f3;
+
+    --primario: #8b5cf6;
+    --primario-osc: #6d28d9;
+
+    --exito: #22a06b;
+    --peligro: #e63968;
+
+    --menu: #40185f;
+
+    --radio: 18px;
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+}
+
+body {
+    min-height: 100vh;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.login {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+    gap: 60px;
+
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            #ead7ff 0%,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            #d8b4fe 0%,
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #f8f3ff,
+            #eadcff
+        );
+}
+
+
+/* =========================================================
+   LOGO DE KUROMI
+   ========================================================= */
+
+.login::before {
+    content: "";
+
+    width: 350px;
+    height: 350px;
+
+    background-image: url("/static/img/logo.png");
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: drop-shadow(
+        0 18px 30px rgba(109, 40, 217, 0.25)
+    );
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   TARJETA BLANCA DEL LOGIN
+   ========================================================= */
+
+.login-card {
+    width: 520px;
+    max-width: 100%;
+
+    background: #ffffff;
+
+    padding: 55px 60px;
+
+    border-radius: 28px;
+
+    border: 1px solid #dfc8f3;
+
+    box-shadow:
+        0 25px 60px rgba(76, 29, 149, 0.15),
+        0 5px 20px rgba(76, 29, 149, 0.08);
+
+    position: relative;
+}
+
+
+/* Decoración superior */
+
+.login-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 7px;
+
+    border-radius: 28px 28px 0 0;
+
+    background: linear-gradient(
+        90deg,
+        #a855f7,
+        #7c3aed,
+        #c084fc
+    );
+}
+
+
+/* =========================================================
+   MARCA DEL LOGIN
+   ========================================================= */
+
+.login-marca {
+    text-align: center;
+
+    margin-bottom: 32px;
+}
+
+.login-marca .logo {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 150px;
+
+    padding: 10px 20px;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #a855f7,
+        #7c3aed
+    );
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 8px 20px rgba(124, 58, 237, 0.25);
+}
+
+.login-marca h1 {
+    margin: 0 0 10px;
+
+    color: #32134f;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.login-marca p {
+    margin: 0;
+
+    color: #8a6aa3;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   FORMULARIOS
+   ========================================================= */
+
+form {
+    margin: 0;
+}
+
+label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--texto);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+input,
+select {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 2px solid #e5d5f5;
+
+    border-radius: 12px;
+
+    background: #fcfaff;
+
+    color: var(--texto);
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+input::placeholder {
+    color: #b39ac4;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primario);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 4px rgba(139, 92, 246, 0.12);
+}
+
+form > label:not(:first-child),
+form > input + label,
+form > select + label {
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 11px 16px;
+
+    border: 1px solid var(--borde);
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: var(--texto);
+
+    font-weight: 600;
+
+    transition:
+        transform 0.15s,
+        background 0.15s,
+        box-shadow 0.15s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+
+    background: #f8f1ff;
+
+    box-shadow:
+        0 5px 12px rgba(76, 29, 149, 0.10);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+
+/* Botón principal */
+
+.btn-primary {
+    background: linear-gradient(
+        135deg,
+        #a855f7,
+        #7c3aed
+    );
+
+    border: none;
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(124, 58, 237, 0.22);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(
+        135deg,
+        #9333ea,
+        #6d28d9
+    );
+
+    color: white;
+
+    box-shadow:
+        0 10px 24px rgba(124, 58, 237, 0.30);
+}
+
+
+/* Botón éxito */
+
+.btn-success {
+    background: #22a06b;
+
+    border-color: #22a06b;
+
+    color: white;
+}
+
+.btn-success:hover {
+    background: #168357;
+
+    color: white;
+}
+
+
+/* Botón peligro */
+
+.btn-danger {
+    background: #e63968;
+
+    border-color: #e63968;
+
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c92754;
+
+    color: white;
+}
+
+
+/* Botón pequeño */
+
+.btn-mini {
+    padding: 7px 10px;
+
+    font-size: 12px;
+
+    border-radius: 8px;
+
+    margin-right: 5px;
+}
+
+
+/* Botón ancho */
+
+.btn-block {
+    width: 100%;
+}
+
+
+/* Botón transparente */
+
+.btn-ghost {
+    background: transparent;
+
+    border-color: rgba(255, 255, 255, 0.25);
+
+    color: white;
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    color: white;
+}
+
+
+/* =========================================================
+   ERROR LOGIN
+   ========================================================= */
+
+.login-error {
+    margin: 15px 0;
+
+    padding: 11px 13px;
+
+    border-radius: 10px;
+
+    background: #fff0f3;
+
+    border: 1px solid #f4b8c8;
+
+    color: #b4234d;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   AVISOS
+   ========================================================= */
+
+.avisos {
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    width: min(360px, calc(100vw - 40px));
+}
+
+.aviso {
+    padding: 13px 16px;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    border-left: 5px solid var(--exito);
+
+    color: var(--texto);
+
+    box-shadow:
+        0 10px 25px rgba(76, 29, 149, 0.15);
+
+    font-size: 14px;
+}
+
+.aviso.error {
+    border-left-color: var(--peligro);
+}
+
+
+/* =========================================================
+   APLICACIÓN
+   ========================================================= */
+
+.app {
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns: 250px 1fr;
+
+    background: var(--fondo);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background:
+        linear-gradient(
+            180deg,
+            #40185f,
+            #4b1d70
+        );
+
+    color: white;
+
+    padding: 22px 16px;
+
+    box-shadow:
+        5px 0 25px rgba(76, 29, 149, 0.15);
+}
+
+
+/* =========================================================
+   MARCA DE LA SIDEBAR
+   ========================================================= */
+
+.sidebar-marca {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 28px;
+
+    padding: 5px;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   LOGO PEQUEÑO DE LA SIDEBAR
+   ========================================================= */
+
+.logo {
+    width: 70px;
+    height: 44px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #8b5cf6;
+
+    color: white;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.4px;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+.logo-sm {
+    width: 38px;
+    height: 38px;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   MENÚ
+   ========================================================= */
+
+.menu {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.nav-item {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: #eadcff;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    color: white;
+
+    transform: translateX(2px);
+}
+
+.nav-item.activo {
+    background: linear-gradient(
+        135deg,
+        #a855f7,
+        #7c3aed
+    );
+
+    color: white;
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   USUARIO SIDEBAR
+   ========================================================= */
+
+.sidebar-usuario {
+    margin-top: auto;
+
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.sidebar-usuario strong {
+    font-size: 15px;
+}
+
+.rol-badge {
+    display: inline-block;
+
+    width: fit-content;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: rgba(192, 132, 252, 0.20);
+
+    color: #eadcff;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
+
+.contenido {
+    min-width: 0;
+
+    padding: 32px;
+
+    overflow-x: hidden;
+}
+
+.vista {
+    max-width: 1400px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   ENCABEZADOS
+   ========================================================= */
+
+.vista-head {
+    margin-bottom: 24px;
+}
+
+.vista-head h2 {
+    margin: 0 0 6px;
+
+    color: #32134f;
+
+    font-size: 28px;
+}
+
+.vista-head p {
+    margin: 0;
+
+    color: var(--suave);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.card {
+    margin-bottom: 22px;
+
+    padding: 22px;
+
+    background: var(--tarjeta);
+
+    border: 1px solid var(--borde);
+
+    border-radius: var(--radio);
+
+    box-shadow:
+        0 8px 25px rgba(76, 29, 149, 0.07);
+}
+
+.card h3 {
+    margin: 0 0 18px;
+
+    color: #4c1d95;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   FORMULARIOS GRID
+   ========================================================= */
+
+.grid-form {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 17px;
+}
+
+.grid-form > div {
+    min-width: 0;
+}
+
+.grid-form .acciones {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   FILA DE TARJETAS
+   ========================================================= */
+
+.fila-cards {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.5fr)
+        minmax(280px, 1fr);
+
+    gap: 22px;
+}
+
+
+/* =========================================================
+   TOTAL DE VENTAS
+   ========================================================= */
+
+.total-card {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+.total-monto {
+    margin: 5px 0 8px;
+
+    color: #7c3aed;
+
+    font-size: 40px;
+
+    font-weight: 800;
+}
+
+.nota {
+    margin: 8px 0;
+
+    color: var(--suave);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   TABLAS
+   ========================================================= */
+
+.tabla-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 650px;
+}
+
+thead th {
+    padding: 12px;
+
+    background: #f1e8ff;
+
+    border-bottom: 2px solid #dfc8f3;
+
+    color: #4c1d95;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+tbody td {
+    padding: 12px;
+
+    border-bottom: 1px solid #eee3f7;
+
+    color: #4a315c;
+
+    font-size: 13px;
+}
+
+tbody tr:hover {
+    background: #faf7ff;
+}
+
+
+/* =========================================================
+   STOCK BAJO
+   ========================================================= */
+
+.stock-bajo {
+    background: #fff5f7;
+}
+
+.stock-bajo td {
+    color: #8f2447;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+select {
+    appearance: auto;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CAMPOS DESHABILITADOS
+   ========================================================= */
+
+input:disabled,
+select:disabled,
+button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+.acciones {
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   ANIMACIÓN SUAVE
+   ========================================================= */
+
+.card {
+    animation: aparecer 0.25s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .login {
+        gap: 30px;
+    }
+
+    .login::before {
+        width: 280px;
+        height: 280px;
+    }
+
+    .login-card {
+        width: 470px;
+
+        padding: 45px;
+    }
+
+    .app {
+        grid-template-columns: 220px 1fr;
+    }
+
+    .contenido {
+        padding: 25px;
+    }
+
+    .fila-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   TABLET / CELULAR
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .login {
+        flex-direction: column;
+
+        padding: 25px 18px;
+
+        gap: 15px;
+    }
+
+    .login::before {
+        width: 190px;
+        height: 190px;
+    }
+
+    .login-card {
+        width: 100%;
+
+        max-width: 520px;
+
+        padding: 40px 30px;
+    }
+
+    .login-marca h1 {
+        font-size: 26px;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .sidebar {
+        min-height: auto;
+
+        padding: 15px;
+    }
+
+    .sidebar-marca {
+        margin-bottom: 15px;
+    }
+
+    .menu {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+    }
+
+    .sidebar-usuario {
+        margin-top: 15px;
+    }
+
+    .contenido {
+        padding: 20px 15px;
+    }
+
+    .grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-form .acciones {
+        grid-column: auto;
+    }
+
+    .vista-head h2 {
+        font-size: 24px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .login {
+        padding: 18px 12px;
+    }
+
+    .login::before {
+        width: 150px;
+        height: 150px;
+    }
+
+    .login-card {
+        padding: 35px 22px;
+
+        border-radius: 22px;
+    }
+
+    .login-marca h1 {
+        font-size: 23px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    .contenido {
+        padding: 15px 10px;
+    }
+
+    .total-monto {
+        font-size: 32px;
+    }
+}
